@@ -108,7 +108,7 @@ SdResult SerialDriver::read_from_port( SdByte *data, int max_length, SdState *st
 	*/
 	struct timeval timeout;
 	fd_set         fds;
-    SdResult       read_length = 0;
+    SdResult       total_read_length = 0;
     int            interval_timeout_ms = 20000000/SD_SERIAL_SPEED;
 
 	timeout.tv_sec  = 1;
@@ -129,7 +129,7 @@ SdResult SerialDriver::read_from_port( SdByte *data, int max_length, SdState *st
     
 	int count = 0;
     int maxCount = 100;
-    while( read_length < max_length )
+    while( total_read_length < max_length )
     {
         if ( count > maxCount ) return SD_ERROR;
 
@@ -148,22 +148,22 @@ SdResult SerialDriver::read_from_port( SdByte *data, int max_length, SdState *st
         }
         else if ( *state == 0 )
         {
-        	return read_length;
+        	return total_read_length;
         }
 
-        int sdResult;
+        int read_length;
 
-    	sdResult = read( handle, data + read_length, max_length-read_length );
+    	read_length = read( handle, data + total_read_length, max_length-total_read_length );
 
-    	if ( sdResult < 0 )
+    	if ( read_length < 0 )
     	{
-            printf("\n SerialDriver.cpp read faled read_length: %d \n", read_length);
+            printf("\n SerialDriver.cpp read faled total_read_length: %d \n", total_read_length);
     		return SD_ERROR;
     	}
 
-    	read_length += sdResult;
+    	total_read_length += read_length;
         ++count;
     }
 
-    return read_length;
+    return total_read_length;
 }
