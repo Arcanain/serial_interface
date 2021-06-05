@@ -9,10 +9,12 @@
 
 SerialDriver::SerialDriver()
 {
+    printf("init SerialDriver");
 }
 
 SerialDriver::~SerialDriver()
 {
+    printf("deinit SerialDriver");
 }
 
 // reference URL: http://www.02.246.ne.jp/~torutk/cxx/serial/posix_serial.html,
