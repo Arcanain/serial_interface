@@ -11,14 +11,14 @@
 typedef struct _ReceiveData
 {
     int count;
-    float timeStamp; // seconds
+    float time_stamp; // seconds
     // int status = STATUS_INVALID;
-    float rightInput;
-    float leftInput;
-    float rightAngVel;
-    float leftAngVel;
-    float rightAng;
-    float leftAng;
+    float right_input;
+    float left_input;
+    float right_ang_vel;
+    float left_ang_vel;
+    float right_ang;
+    float left_ang;
 } ReceiveData;
 
 typedef struct _SendData
@@ -26,20 +26,20 @@ typedef struct _SendData
     // int count;
     // float timeStamp;
     // int status;
-    float rightVelSetpoint;
-    float leftVelSetpoint;
+    float right_vel_setpoint;
+    float left_vel_setpoint;
 } SendData;
 
 class SerialInterface : public SerialDriver
 {
 private:
-    SdByte stockData[ RECEIVE_DATA_LENGTH*2 ];
+    SdByte stock_data[ RECEIVE_DATA_LENGTH*2 ];
 
-    int oldestDataPoint = 0;
+    int oldest_data_point = 0;
 
     bool is_ready;
 
-    bool updateStockData();
+    bool update_stock_data();
 
     void float_to_char( float value, SdByte *data );
 
@@ -48,9 +48,10 @@ public:
     SerialInterface();
 
     ~SerialInterface();
-    bool setup_serial_driver( char *aPortName );
 
-    bool get_data( ReceiveData *data );
+    void setup_serial_driver( char *port_name );
+
+    void get_data( ReceiveData *data );
 
     bool send_data( SendData *data );
 
