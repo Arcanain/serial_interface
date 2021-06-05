@@ -44,21 +44,21 @@ SdResult SerialDriver::open_port( char *port_name )
             
             switch( SD_SERIAL_SPEED )
             {
-			    case 9600:
-			    	port_config.c_cflag |= B9600;
-				    break;
-			    case 19200:
-			    	port_config.c_cflag |= B19200;
-				    break;
-			    case 38400:
-			    	port_config.c_cflag |= B38400;
-				    break;
-			    case 57600:
-			    	port_config.c_cflag |= B57600;
-				    break;
-			    default:
-				    port_config.c_cflag |= B115200;
-				    break;
+            case 9600:
+                port_config.c_cflag |= B9600;
+                break;
+            case 19200:
+                port_config.c_cflag |= B19200;
+                break;
+            case 38400:
+                port_config.c_cflag |= B38400;
+                break;
+            case 57600:
+                port_config.c_cflag |= B57600;
+                break;
+            default:
+                port_config.c_cflag |= B115200;
+                break;
 			}
 			port_config.c_iflag = INPCK;
 			port_config.c_oflag = 0;
