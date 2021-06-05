@@ -5,6 +5,7 @@
 #define STATUS_GOOD         0
 #define RECEIVE_DATA_LENGTH 32
 #define SEND_DATA_LENGTH    8
+#define MAX_FAILED_COUNT    50
 
 #include "SerialDriver.hpp"
 
@@ -37,6 +38,8 @@ private:
 
     int oldest_data_point = 0;
 
+    int read_failed_count;
+    
     bool is_ready;
 
     bool update_stock_data();

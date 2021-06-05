@@ -52,13 +52,16 @@ void SerialInterface::int_to_char( int value, SdByte *data )
 
 void SerialInterface::setup_serial_driver( char *port_name )
 {
+    read_failed_count = 0;
     reset_data();
     close_port();
+
     if ( open_port( port_name ) == SD_SUCCESS ) {
         SdByte testData[2];
         SdState port_state;
         SdResult result = read_from_port( testData, sizeof( testData ), &port_state );
         is_ready = ( result != -1 );
+        return;
     }
 
     is_ready = false;
@@ -66,7 +69,13 @@ void SerialInterface::setup_serial_driver( char *port_name )
 
 void SerialInterface::get_data( ReceiveData *data )
 {
-    if ( update_stock_data ) is_ready = false;
+    if ( !update_stock_data() ) {
+        read_failed_count++;
+        if (read_failed_count == MAX_FAILED_COUNT) is_ready = false;
+        return;
+    } else {
+        read_failed_count = 0;
+    }
 
     bool is_in_data = false;
     SdByte unit_data[RECEIVE_DATA_LENGTH];
@@ -74,7 +83,7 @@ void SerialInterface::get_data( ReceiveData *data )
 
     int p = 0;
     for ( int i = 0; i < sizeof( stock_data ); ++i ) {
-        p = oldestDataPoint + i;
+        p = oldest_data_point + i;
 
         if ( p >= sizeof( stock_data ) ) p %= ( sizeof( stock_data ) );
         if ( is_in_data ) {
@@ -93,39 +102,56 @@ void SerialInterface::get_data( ReceiveData *data )
     data->count = *(int*)&unit_data[p];
     p += sizeof(int);
 
-    data->timeStamp = *(float*)&unit_data[p];
+    data->time_stamp = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->rightInput = *(float*)&unit_data[p];
+    data->right_input = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->leftInput = *(float*)&unit_data[p];
+    data->left_input = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->rightAngVel = *(float*)&unit_data[p];
+    data->right_ang_vel = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->leftAngVel = *(float*)&unit_data[p];
+    data->left_ang_vel = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->rightAng = *(float*)&unit_data[p];
+    data->right_ang = *(float*)&unit_data[p];
     p += sizeof(float);
 
-    data->leftAng = *(float*)&unit_data[p];
+    data->left_ang = *(float*)&unit_data[p];
     p += sizeof(float);
-
-    return true;
 }
 
-
-bool SerialInterface::send_data( SendData *data );
-
-void SerialInterface::reset_data();
+bool SerialInterface::send_data( SendData *data )
 {
-    for ( int i = 0; i < sizeof( stockData ); i++ ) {
-        stockData[i] = 0;
+    SdResult result = SD_ERROR;
+    SdByte byte_data[SEND_DATA_LENGTH + 1];
+
+    int p = 0;
+
+    byte_data[p] = 0x0a; // set header
+    p++;
+
+    //TODO: recode for full data
+    float_to_char( data->right_vel_setpoint, &byte_data[p] );
+    p += sizeof(float);
+
+    float_to_char( data->left_vel_setpoint, &byte_data[p] );
+    p += sizeof(float);
+
+    result = write_to_port( byte_data, sizeof(byte_data) );
+
+    return (result != SD_ERROR);
+}
+
+void SerialInterface::reset_data()
+{
+    for ( int i = 0; i < sizeof( stock_data ); i++ ) {
+        stock_data[i] = 0;
     }
-    oldestDataPoint = 0;
+    oldest_data_point = 0;
 }
 
 bool SerialInterface::check_is_ready()
