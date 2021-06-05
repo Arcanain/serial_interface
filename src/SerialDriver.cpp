@@ -40,7 +40,7 @@ SdResult SerialDriver::open_port( char *port_name )
 
         if ( !tcgetattr( handle, &port_config ) )
         {
-            port_config.c_cflag = = CS8 | CLOCAL | CREAD;
+            port_config.c_cflag = CS8 | CLOCAL | CREAD;
             
             switch( SD_SERIAL_SPEED )
             {
