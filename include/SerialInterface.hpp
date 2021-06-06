@@ -34,32 +34,33 @@ typedef struct _SendData
 class SerialInterface : public SerialDriver
 {
 private:
-    SdByte stock_data[ RECEIVE_DATA_LENGTH*2 ];
+    SdByte stock_data[RECEIVE_DATA_LENGTH * 2];
 
     int oldest_data_point = 0;
 
     int read_failed_count;
-    
+
     bool is_ready = false;
 
     bool update_stock_data();
 
-    void float_to_char( float value, SdByte *data );
+    void float_to_char(float value, SdByte *data);
 
-    void int_to_char( int value, SdByte *data );
+    void int_to_char(int value, SdByte *data);
+
 public:
     SerialInterface();
 
     ~SerialInterface();
 
-    void setup_serial_driver( char *port_name );
+    void setup_serial_driver(char *port_name);
 
-    void get_data( ReceiveData *data );
+    void get_data(ReceiveData *data);
 
-    bool send_data( SendData *data );
+    bool send_data(SendData *data);
 
     void reset_data();
-    
+
     bool check_is_ready();
 };
 
