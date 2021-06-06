@@ -37,7 +37,7 @@ int main(int argc, char **argv)
             sendData.right_vel_setpoint = 9.9;
             sendData.left_vel_setpoint = 2.03989;
 
-            if (serialInterface.send_data(&sendData))
+            if (!serialInterface.send_data(&sendData))
             {
                 ROS_ERROR("send data fail");
             }
