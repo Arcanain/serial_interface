@@ -5,7 +5,7 @@
 #define STATUS_GOOD         0
 #define RECEIVE_DATA_LENGTH 32
 #define SEND_DATA_LENGTH    8
-#define MAX_FAILED_COUNT    50
+#define MAX_FAILED_COUNT    20
 
 #include "SerialDriver.hpp"
 
