@@ -40,7 +40,7 @@ private:
 
     int read_failed_count;
     
-    bool is_ready;
+    bool is_ready = false;
 
     bool update_stock_data();
 
