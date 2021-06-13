@@ -34,8 +34,8 @@ int main(int argc, char **argv)
             ROS_INFO("ReceveData.leftAng: %f", receiveData.left_ang);
 
             SendData sendData;
-            sendData.right_vel_setpoint = 9.9;
-            sendData.left_vel_setpoint = 2.03989;
+            sendData.right_vel_setpoint = 3.0;
+            sendData.left_vel_setpoint = 2.5;
 
             if (!serialInterface.send_data(&sendData))
             {
