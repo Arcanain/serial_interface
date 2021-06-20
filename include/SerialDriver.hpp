@@ -1,7 +1,7 @@
 #ifndef _SERIAL_DRIVER_H_
 #define _SERIAL_DRIVER_H_
 
-#define SD_SERIAL_SPEED         115200
+#define SD_SERIAL_SPEED         9600
 #define SD_INVALID_HANDLE       (-1)
 #define SD_MAX_PORT_NAME_LEN    24
 

@@ -18,7 +18,7 @@ bool SerialInterface::update_stock_data()
 
     while ( port_state )
     {
-        SdByte temp_read_data[ RECEIVE_DATA_LENGTH * 2 ]; //TODO: check data size
+        SdByte temp_read_data[ RECEIVE_DATA_LENGTH * 2 + 2 ]; //TODO: check data size
         SdResult result = read_from_port( temp_read_data, sizeof(temp_read_data), &port_state );
         if ( result == SD_ERROR ) return false;
 
@@ -87,7 +87,7 @@ void SerialInterface::get_data( ReceiveData *data )
 
         if ( p >= sizeof( stock_data ) ) p %= ( sizeof( stock_data ) );
         if ( is_in_data ) {
-            if (unit_data_point > RECEIVE_DATA_LENGTH) {
+            if (unit_data_point >= RECEIVE_DATA_LENGTH) {
                 break;
             }
             unit_data[unit_data_point] = stock_data[p];
@@ -100,7 +100,7 @@ void SerialInterface::get_data( ReceiveData *data )
     p = 0;
 
     data->count = *(int*)&unit_data[p];
-    p += sizeof(int);
+    p += 4;
 
     data->time_stamp = *(float*)&unit_data[p];
     p += sizeof(float);
